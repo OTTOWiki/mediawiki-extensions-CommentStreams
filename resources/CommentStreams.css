@@ -5,6 +5,8 @@
 .cs-comments {
 	margin-top: 10px;
 	font-family: sans-serif;
+	content-visibility: auto;
+	contain-intrinsic-size: auto 500px;
 }
 
 .cs-stream {
@@ -15,6 +17,7 @@
 .cs-comment {
 	position: relative;
 	overflow: hidden;
+	animation: fadeIn 0.3s ease;
 }
 
 .cs-reply-comment {
@@ -25,14 +28,18 @@
 .cs-comment-header {
 	padding-top: 2px;
 	padding-bottom: 2px;
+	border-radius: 5px 5px 0px 0px;
+	transition: background-color 0.2s ease;
 }
 
 .cs-head-comment > .cs-comment-header {
 	border-top: 1px solid #00a7d8;
+	border-radius: 5px 5px 0px 0px;
 }
 
 .cs-target-comment .cs-comment-header {
 	border: 2px solid #0f0;
+	box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
 }
 
 .cs-expanded .cs-comment-header {
@@ -42,6 +49,7 @@
 .cs-collapsed .cs-comment-header {
 	background-color: #eee;
 	margin-bottom: 10px;
+	border-radius: 5px;
 }
 
 .cs-reply-comment > .cs-comment-header {
@@ -67,6 +75,12 @@
 .cs-avatar {
 	height: 48px;
 	padding: 5px;
+	border-radius: 50%;
+	transition: transform 0.2s ease;
+}
+
+.cs-avatar:hover {
+	transform: scale(1.05);
 }
 
 .cs-comment-title {
@@ -87,6 +101,13 @@
 .cs-comment-author a {
 	font-weight: bold;
 	color: #00a7d8;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.cs-comment-author a:hover {
+	color: #0088b8;
+	text-decoration: underline;
 }
 
 .cs-comment-details {
@@ -104,18 +125,50 @@
 .cs-vote-down-count {
 	position: relative;
 	margin-left: -5px;
+	font-weight: bold;
+	transition: color 0.2s ease;
+}
+
+.cs-vote-up-count:hover {
+	color: #00a7d8;
+}
+
+.cs-vote-down-count:hover {
+	color: #d9534f;
 }
 
 .cs-comment-body {
+	background-color: var(--color-surface-0, #ffffff);
+	border-radius: 0px 0px 5px 5px;
+	margin-top: 0px;
 	margin-bottom: 5px;
 	font-size: 1em;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	transition: box-shadow 0.2s ease;
+}
+
+.cs-comment-body:hover {
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.cs-comment-body > p {
+	padding: 1em 0.7em 1em;
+	margin-top: 0px;
+	margin-bottom: 0;
+	line-height: 1.6;
+}
+
+.cs-collapsed .cs-comment-body {
+	display: none;
 }
 
 .cs-edit-box {
 	position: relative;
 	background-color: #e4f1ff;
-	padding: 5px 5px 5px 5px;
+	padding: 5px;
 	margin-bottom: 7px;
+	border-radius: 5px;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .cs-reply-edit-box {
@@ -123,33 +176,49 @@
 }
 
 .cs-title-edit-field {
-	border-radius: 2px;
-	border-width: 1px;
-	border-color: #00a7d8;
+	border-radius: 3px;
+	border: 1px solid #00a7d8;
 	box-sizing: border-box;
 	width: 100%;
-	padding: 5px 5px 5px 5px;
+	padding: 5px;
 	margin-bottom: 5px;
 	font-family: sans-serif;
 	font-size: 1.14em;
 	font-weight: bold;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cs-title-edit-field:focus {
+	border-color: #0088b8;
+	box-shadow: 0 0 0 2px rgba(0, 167, 216, 0.2);
+	outline: none;
 }
 
 .cs-body-edit-field {
-	border-radius: 2px;
-	border-width: 1px;
-	border-color: #00a7d8;
+	border-radius: 3px;
+	border: 1px solid #00a7d8;
 	width: 100%;
-	padding: 5px 5px 5px 5px;
+	padding: 5px;
 	margin-bottom: 5px;
 	font-family: sans-serif;
 	font-size: 1em;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+	resize: vertical;
+	min-height: 100px;
+}
+
+.cs-body-edit-field:focus {
+	border-color: #0088b8;
+	box-shadow: 0 0 0 2px rgba(0, 167, 216, 0.2);
+	outline: none;
 }
 
 .cs-comments div.ve-ce-branchNode {
 	border: 1px solid #00a7d8;
+	border-radius: 3px;
 	margin-bottom: 5px;
 	padding: 7px;
+	background-color: #fff;
 }
 
 .cs-toc {
@@ -158,8 +227,12 @@
 	width: 20em;
 	background-color: #f8f9bf;
 	border: 1px solid #a2a9b1;
+	border-radius: 5px;
 	padding: 5px;
 	font-size: 95%;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-left: 10px;
+	margin-bottom: 10px;
 }
 
 .cs-toc h2 {
@@ -172,21 +245,130 @@
 
 .mw-content-ltr .cs-toc ul {
 	text-align: left;
+	list-style-type: disc;
+	padding-left: 20px;
+}
+
+.cs-toc a {
+	color: #00a7d8;
+	text-decoration: none;
+}
+
+.cs-toc a:hover {
+	text-decoration: underline;
 }
 
 .commentstreams-history-table {
 	width: 100%;
+	border-collapse: collapse;
 }
 
 .commentstreams-history-table th {
 	font-weight: bold;
 	padding: 10px;
+	background-color: #f0f0f0;
+	border-bottom: 2px solid #00a7d8;
 }
 
 .commentstreams-history-table td {
-	padding: 0 10px;
+	padding: 10px;
 }
 
 .commentstreams-history-table tr {
 	border-bottom: 1px solid #ddd;
+	transition: background-color 0.2s ease;
+}
+
+.commentstreams-history-table tr:hover {
+	background-color: #f8f8f8;
+}
+
+@media (max-width: 768px) {
+	.cs-toc {
+		float: none;
+		width: 100%;
+		margin: 10px 0;
+	}
+	
+	.cs-reply-comment {
+		margin-left: 15px;
+	}
+	
+	.cs-reply-edit-box {
+		margin-left: 15px;
+	}
+	
+	.cs-avatar {
+		height: 36px;
+	}
+	
+	.cs-voting-span {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.cs-comment-header {
+		background-color: #2a2a2a;
+	}
+	
+	.cs-expanded .cs-comment-header {
+		background-color: #1a3a52;
+	}
+	
+	.cs-collapsed .cs-comment-header {
+		background-color: #333;
+	}
+	
+	.cs-reply-comment > .cs-comment-header {
+		background-color: #1f2937;
+	}
+	
+	.cs-comment-body {
+		background-color: var(--color-surface-0, #1a1a1a);
+		color: #e0e0e0;
+	}
+	
+	.cs-edit-box {
+		background-color: #1a3a52;
+	}
+	
+	.cs-toc {
+		background-color: #2a2a1f;
+		border-color: #555;
+	}
+	
+	.commentstreams-history-table th {
+		background-color: #2a2a2a;
+	}
+	
+	.commentstreams-history-table tr:hover {
+		background-color: #333;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.cs-clearfix::after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+.cs-text-muted {
+	opacity: 0.6;
+}
+
+.cs-text-small {
+	font-size: 0.9em;
 }
