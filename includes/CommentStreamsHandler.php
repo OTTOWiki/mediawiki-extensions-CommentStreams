@@ -250,13 +250,17 @@ class CommentStreamsHandler {
 			return null;
 		}
 
-		// display comments on this page if it contains the <comment-streams/> tag function
-		if ( $this->areCommentsEnabled === self::COMMENTS_ENABLED ) {
-			return null;
+		// display comments on this page if it contains the <comment-streams/> tag function and the
+		// user can read the page
+		if ( $this->areCommentsEnabled === self::COMMENTS_ENABLED &&
+			$output->getUser()->probablyCan( 'read', $title ) ) {
+			return $title;
 		}
 
-		if ( $title->isTalkPage() ) {
-			// Show comments in talk namespaces if the corresponding subject namespace is allowed
+		// Set the associated page to the subject page if the title is a talk page and the talk
+		// namespace is not specified in $wgCommentStreamsAllowedNamespaces
+		if ( $title->isTalkPage() && !in_array( $namespace, $csAllowedNamespaces ) ) {
+			// Show subject page comments on talk page if the corresponding subject namespace is allowed
 			$namespace = $this->namespaceInfo->getSubject( $namespace );
 			$title = Title::makeTitle( $namespace, $title->getDBkey() );
 		}
@@ -343,7 +347,8 @@ class CommentStreamsHandler {
 			'enableWatchlist' => $this->notifier->isLoaded() ? 1 : 0,
 			'comments' => $comments,
 			'historyHandler' => $historyHandler ? json_encode( $historyHandler ) : null,
-			'associatedPage' => $showFor->getPrefixedDBkey()
+			'associatedPage' => $showFor->getPrefixedDBkey(),
+			'associatedPageId' => $showFor->getId(),
 		];
 		$output->addJsConfigVars( 'CommentStreams', $commentStreamsParams );
 		$output->addModules( 'ext.CommentStreams' );
