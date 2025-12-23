@@ -327,7 +327,7 @@
 	
 	.cs-comment-body {
 		background-color: var(--color-surface-0, #1a1a1a);
-		color: #e0e0e0;
+		color: var(--color-base);
 	}
 	
 	.cs-edit-box {
