@@ -100,6 +100,11 @@ class EchoNotifier implements NotifierInterface {
 			'comment_title' => $commentTitle,
 			'associated_page_display_title' => $associatedPageDisplayTitle,
 			'comment_wikitext' => $this->serializer->getWikitext( $comment ),
+			// Skip synchronous email delivery: SMTP connection to the configured
+			// mail server can block the comment API request for a long time
+			// (see UserMailer/Net_SMTP), causing the client to time out and report
+			// "invalid API response" even though the comment was created.
+			'noemail' => true,
 		];
 
 		EchoEvent::create( [
@@ -143,6 +148,8 @@ class EchoNotifier implements NotifierInterface {
 			'comment_title' => $parentComment->getTitle(),
 			'associated_page_display_title' => $associatedPageDisplayTitle,
 			'comment_wikitext' => $this->serializer->getWikitext( $reply ),
+			// Skip synchronous email delivery: see sendCommentNotifications().
+			'noemail' => true,
 		];
 
 		EchoEvent::create( [
