@@ -88,14 +88,7 @@ module.exports = ( function () {
 
 		const $headComment = this.createComment( commentData );
 
-		const id = 'cs-comment-' + commentData.id;
-
 		this.entityId = commentData.id;
-
-		if ( this.env.targetComment === id ) {
-			$headComment.addClass( 'cs-target-comment' );
-			this.$targetComment = $headComment;
-		}
 
 		this.$stream = $( '<div>' )
 			.addClass( 'cs-stream' )
@@ -252,6 +245,13 @@ module.exports = ( function () {
 			this.$headCommentBody = $commentBody;
 		} else {
 			$comment.addClass( 'cs-reply-comment' );
+		}
+
+		const id = 'cs-comment-' + commentData.id;
+
+		if ( this.env.targetComment === id ) {
+			$comment.addClass( 'cs-target-comment' );
+			this.$targetComment = $comment;
 		}
 
 		$comment.append( [ $commentHeader, $commentBody, $commentFooter ] );
@@ -1027,7 +1027,7 @@ module.exports = ( function () {
 	Stream.prototype.editCommentFromVE = function ( element, entityId ) {
 		const self = this;
 		const veInstances = this.block.$bodyField.getVEInstances();
-		const curVEEditor = veInstances[ veInstances.length - 1 ];
+		const curVEEditor = veInstances.find( ( ve ) => ve.$node.is( this.block.$bodyField ) );
 		new mw.Api().post( {
 			action: 'veforall-parsoid-utils',
 			from: 'html',
@@ -1158,7 +1158,7 @@ module.exports = ( function () {
 	};
 
 	Stream.prototype.reportError = function ( message ) {
-	/* eslint-disable mediawiki/msg-doc */
+
 		let messageText = message;
 		const mwmessage = mw.message( message );
 		if ( mwmessage.exists() ) {

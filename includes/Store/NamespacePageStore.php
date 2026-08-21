@@ -50,7 +50,6 @@ use MediaWiki\User\User;
 use MediaWiki\User\UserFactory;
 use MediaWiki\User\UserIdentity;
 use MediaWiki\Utils\MWTimestamp;
-use MWException;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\ILoadBalancer;
@@ -193,13 +192,20 @@ class NamespacePageStore implements ICommentStreamsStore {
 				return null;
 			}
 
+			$author = $firstRevision->getUser();
+			$lastEditor = $latestRevision->getUser();
+			if ( !$author || !$lastEditor ) {
+				// The author of one of the revisions was hidden.
+				return null;
+			}
+
 			return new Comment(
 				$id,
 				$result->cst_c_comment_title,
 				$result->cst_c_block_name,
 				$this->titleFactory->newFromID( $result->cst_c_assoc_page_id ),
-				$firstRevision->getUser(),
-				$latestRevision->getUser(),
+				$author,
+				$lastEditor,
 				MWTimestamp::getInstance( $firstRevision->getTimestamp() ),
 				MWTimestamp::getInstance( $latestRevision->getTimestamp() ),
 			);
@@ -373,7 +379,6 @@ class NamespacePageStore implements ICommentStreamsStore {
 	 * @param User $user
 	 * @param WikitextContent $content
 	 * @return WikiPage|null
-	 * @throws MWException
 	 */
 	private function createCommentPage( User $user, WikitextContent $content ): ?WikiPage {
 		do {
@@ -493,7 +498,6 @@ class NamespacePageStore implements ICommentStreamsStore {
 	 * @param string $wikitext
 	 * @param User $user
 	 * @return bool
-	 * @throws MWException
 	 */
 	public function updateComment(
 		Comment $comment,
@@ -547,7 +551,6 @@ class NamespacePageStore implements ICommentStreamsStore {
 	 * @param string $wikitext
 	 * @param User $user
 	 * @return bool
-	 * @throws MWException
 	 */
 	public function updateReply(
 		Reply $reply,
@@ -595,7 +598,7 @@ class NamespacePageStore implements ICommentStreamsStore {
 			$wikiPage->getTitle()->toPageIdentity(), $actor
 		);
 		$deletePage->setSuppress( true );
-		$status = $deletePage->deleteIfAllowed( 'comment deleted' );
+		$status = $deletePage->deleteUnsafe( 'comment deleted' );
 
 		if ( !$status->isGood() ) {
 			return false;
@@ -638,7 +641,7 @@ class NamespacePageStore implements ICommentStreamsStore {
 			$wikiPage->getTitle()->toPageIdentity(), $actor
 		);
 		$deletePage->setSuppress( true );
-		$status = $deletePage->deleteIfAllowed( 'reply deleted' );
+		$status = $deletePage->deleteUnsafe( 'reply deleted' );
 
 		if ( !$status->isGood() ) {
 			return false;
@@ -697,7 +700,6 @@ class NamespacePageStore implements ICommentStreamsStore {
 	/**
 	 * @param int $pageId
 	 * @param int $commentPageId
-	 * @throws MWException
 	 */
 	public function upsertReplyMetadata(
 		int $pageId,
@@ -882,7 +884,6 @@ EOT;
 	 * @param WikiPage $wikiPage
 	 * @param Authority $authority
 	 * @return int|null
-	 * @throws MWException
 	 */
 	public function createEmptyPage(
 		WikiPage $wikiPage,

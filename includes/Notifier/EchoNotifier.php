@@ -32,7 +32,6 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Page\PageProps;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\User\User;
-use MWException;
 use WikiPage;
 
 class EchoNotifier implements NotifierInterface {
@@ -73,7 +72,6 @@ class EchoNotifier implements NotifierInterface {
 	 * @param WikiPage $associatedPage the associated page for the comment
 	 * @param User $user
 	 * @param string $commentTitle
-	 * @throws MWException
 	 * @throws Exception
 	 */
 	public function sendCommentNotifications(
@@ -122,7 +120,6 @@ class EchoNotifier implements NotifierInterface {
 	 * @param WikiPage $associatedPage the associated page for the comment
 	 * @param User $user
 	 * @param Comment $parentComment
-	 * @throws MWException
 	 */
 	public function sendReplyNotifications(
 		Reply $reply,
@@ -146,6 +143,7 @@ class EchoNotifier implements NotifierInterface {
 			'comment_author_username' => $reply->getAuthor()->getName(),
 			'comment_author_display_name' => $this->serializer->getDisplayNameFromUser( $reply->getAuthor(), false ),
 			'comment_title' => $parentComment->getTitle(),
+			'parent_id' => $parentComment->getId(),
 			'associated_page_display_title' => $associatedPageDisplayTitle,
 			'comment_wikitext' => $this->serializer->getWikitext( $reply ),
 			// Skip synchronous email delivery: see sendCommentNotifications().
@@ -170,10 +168,9 @@ class EchoNotifier implements NotifierInterface {
 	 * Used by Echo to locate the users watching a comment being replied to.
 	 * @param EchoEvent $event the Echo event
 	 * @return array array mapping user id to User object
-	 * @throws MWException
 	 */
 	public static function locateUsersWatchingComment( EchoEvent $event ): array {
-		$id = $event->getExtraParam( 'comment_id' );
+		$id = $event->getExtraParam( 'parent_id', $event->getExtraParam( 'comment_id' ) );
 		if ( $id === null ) {
 			throw new \RuntimeException( wfMessage( 'commentstreams-no-comment_id' )->plain() );
 		}

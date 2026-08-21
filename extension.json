@@ -1,6 +1,6 @@
 {
 	"name": "CommentStreams",
-	"version": "9.0.0",
+	"version": "9.0.8",
 	"author": [
 		"[https://www.mediawiki.org/wiki/User:Jji Jason Ji]",
 		"[https://www.mediawiki.org/wiki/User:Cindy.cicalese Cindy Cicalese]",
@@ -103,15 +103,7 @@
 				"Block.js",
 				"Stream.js"
 			],
-			"dependencies": [
-				"oojs-ui",
-				"oojs-ui.styles.icons-alerts",
-				"oojs-ui.styles.icons-content",
-				"oojs-ui.styles.icons-editing-core",
-				"oojs-ui.styles.icons-interactions",
-				"oojs-ui.styles.icons-moderation",
-				"oojs-ui.styles.icons-movement"
-			],
+			"dependencies": [],
 			"targets": [
 				"desktop",
 				"mobile"
@@ -194,7 +186,8 @@
 				"commentstreams-history-text"
 			],
 			"dependencies": [
-				"oojs-ui"
+				"oojs-ui-core",
+				"oojs-ui-windows"
 			]
 		}
 	},
@@ -321,13 +314,20 @@
 		},
 		"registerUsageTracker": {
 			"class": "MediaWiki\\Extension\\CommentStreams\\UsageTracker\\RegisterUsageTracker"
+		},
+		"addNamespaceProperties": {
+			"class": "MediaWiki\\Extension\\CommentStreams\\Hook\\NamespaceManagerCollectNamespaceProperties\\AddNamespaceProperties"
+		},
+		"resolveCommentWatcherForNotification": {
+			"class": "MediaWiki\\Extension\\CommentStreams\\Notifier\\NotifyMeWatchlistProviderHooks",
+			"services": [ "CommentStreamsStore" ]
 		}
 	},
 	"Hooks": {
 		"MediaWikiPerformAction": "main",
 		"MovePageIsValidMove": "main",
 		"GetUserPermissionsErrors": "main",
-		"BeforePageDisplay": "main",
+		"OutputPageParserOutput": "main",
 		"ShowSearchHitTitle": "main",
 		"ParserFirstCallInit": "main",
 		"SpecialExportGetExtraPages": "main",
@@ -341,7 +341,10 @@
 		"SMWStore::updateDataBefore": "smw",
 		"SMW::Settings::BeforeInitializationComplete": "smw",
 		"MediaWikiServices": "talkPageStore",
-		"BSUsageTrackerRegisterCollectors": "registerUsageTracker"
+		"BSUsageTrackerRegisterCollectors": "registerUsageTracker",
+		"NamespaceManagerCollectNamespaceProperties": "addNamespaceProperties",
+		"NotifyMeWatchlistProviderGetWatchSource": "resolveCommentWatcherForNotification",
+		"NotifyMeWatchlistProviderGetWatchers": "resolveCommentWatcherForNotification"
 	},
 	"callback": "MediaWiki\\Extension\\CommentStreams\\MainHooks::onRegistration",
 	"RestRoutes": [
