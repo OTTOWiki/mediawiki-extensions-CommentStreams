@@ -1,0 +1,71 @@
+[
+	{
+		"name": "cs_entity_revisions",
+		"comment": "Revision history of CommentStreams entities for the table storage model",
+		"columns": [
+			{
+				"name": "cser_id",
+				"type": "integer",
+				"options": {
+					"autoincrement": true,
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "cser_entity_id",
+				"comment": "cs_entities.cse_id",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "cser_text",
+				"comment": "Raw wikitext of this revision. Cleared when the entity is deleted.",
+				"type": "blob",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "cser_actor",
+				"comment": "actor.actor_id of the editor",
+				"type": "bigint",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "cser_timestamp",
+				"type": "mwtimestamp",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "cser_deleted",
+				"comment": "Set together with cs_entities.cse_deleted",
+				"type": "boolean",
+				"options": {
+					"notnull": true,
+					"default": 0
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "cser_entity_id",
+				"columns": [
+					"cser_entity_id",
+					"cser_timestamp"
+				]
+			}
+		],
+		"pk": [
+			"cser_id"
+		]
+	}
+]

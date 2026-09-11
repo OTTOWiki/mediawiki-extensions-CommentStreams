@@ -51,6 +51,8 @@ class NoServiceHooks implements
 		$updater->addExtensionTable( 'cs_votes', $dir . '/cs_votes.sql' );
 		$updater->addExtensionTable( 'cs_watchlist', $dir . '/cs_watchlist.sql' );
 		$updater->addExtensionTable( 'cs_associated_pages', $dir . '/cs_associated_pages.sql' );
+		$updater->addExtensionTable( 'cs_entities', $dir . '/cs_entities.sql' );
+		$updater->addExtensionTable( 'cs_entity_revisions', $dir . '/cs_entity_revisions.sql' );
 
 		if ( $updater->fieldExists( 'cs_watchlist', 'cst_wl_page_id' ) ) {
 			$updater->modifyExtensionTable( 'cs_watchlist', $dir . '/cs_watchlist_comment_id_patch.sql' );

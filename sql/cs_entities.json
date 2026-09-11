@@ -1,0 +1,128 @@
+[
+	{
+		"name": "cs_entities",
+		"comment": "CommentStreams entities (comments and replies) for the table storage model",
+		"columns": [
+			{
+				"name": "cse_id",
+				"comment": "Entity ID (comment ID or reply ID)",
+				"type": "integer",
+				"options": {
+					"autoincrement": true,
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "cse_type",
+				"comment": "0 = comment, 1 = reply",
+				"type": "smallint",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "cse_assoc_page_id",
+				"comment": "page_id of the page this comment stream belongs to",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "cse_parent_id",
+				"comment": "cse_id of the parent comment (replies only)",
+				"type": "integer",
+				"options": {
+					"unsigned": true,
+					"notnull": false
+				}
+			},
+			{
+				"name": "cse_title",
+				"comment": "Comment title (comments only)",
+				"type": "binary",
+				"options": {
+					"notnull": false,
+					"length": 255
+				}
+			},
+			{
+				"name": "cse_block_name",
+				"comment": "Name of the <comment-streams> block, if any",
+				"type": "binary",
+				"options": {
+					"notnull": false,
+					"length": 255
+				}
+			},
+			{
+				"name": "cse_author_actor",
+				"comment": "actor.actor_id of the author",
+				"type": "bigint",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "cse_last_editor_actor",
+				"comment": "actor.actor_id of the last editor, null if never edited",
+				"type": "bigint",
+				"options": {
+					"unsigned": true,
+					"notnull": false
+				}
+			},
+			{
+				"name": "cse_created",
+				"type": "mwtimestamp",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "cse_modified",
+				"type": "mwtimestamp",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "cse_deleted",
+				"comment": "Soft deletion flag",
+				"type": "boolean",
+				"options": {
+					"notnull": true,
+					"default": 0
+				}
+			}
+		],
+		"indexes": [
+			{
+				"name": "cse_assoc_page_id",
+				"columns": [
+					"cse_assoc_page_id",
+					"cse_type"
+				]
+			},
+			{
+				"name": "cse_parent_id",
+				"columns": [
+					"cse_parent_id"
+				]
+			},
+			{
+				"name": "cse_author_actor",
+				"columns": [
+					"cse_author_actor"
+				]
+			}
+		],
+		"pk": [
+			"cse_id"
+		]
+	}
+]

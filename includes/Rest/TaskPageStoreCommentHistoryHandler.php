@@ -5,7 +5,6 @@ namespace MediaWiki\Extension\CommentStreams\Rest;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Extension\CommentStreams\AbstractComment;
 use MediaWiki\Extension\CommentStreams\ICommentStreamsStore;
-use MediaWiki\Extension\CommentStreams\Store\TalkPageStore;
 use MediaWiki\Language\Language;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Rest\HttpException;
@@ -34,7 +33,7 @@ class TaskPageStoreCommentHistoryHandler extends SimpleHandler {
 	 * @throws HttpException
 	 */
 	public function execute() {
-		if ( !( $this->store instanceof TalkPageStore ) ) {
+		if ( !method_exists( $this->store, 'getHistory' ) ) {
 			throw new HttpException( 'storenotsupported', 400 );
 		}
 		$commentId = $this->getValidatedParams()['comment'];

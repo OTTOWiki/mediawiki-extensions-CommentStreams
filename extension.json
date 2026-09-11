@@ -49,6 +49,18 @@
 						"HookContainer",
 						"UserNameUtils"
 					]
+				},
+				"table": {
+					"class": "MediaWiki\\Extension\\CommentStreams\\Store\\TableStore",
+					"services": [
+						"DBLoadBalancer",
+						"TitleFactory",
+						"UserFactory",
+						"PermissionManager",
+						"ActorNormalization",
+						"CommentStreamsLogger",
+						"HookContainer"
+					]
 				}
 			},
 			"Notifier": {
